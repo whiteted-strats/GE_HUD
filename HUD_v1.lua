@@ -36,14 +36,15 @@ function updateGlblVars()
     -- Get camera location - assumed to be at bond
     b = PlayerData.get_value("position")
 
+    pdStart = PlayerData.get_start_address()
     -- Azimuth and inclination angles which SEEM to account for Bond's wobbling.
     -- There appear to several such values. These addresses are chosen to be from the same block,
     --   which seems to update the most often.
     -- Particularly sinA is wierd, as the sign is wrong, but we flip it.
-    cosA = mainmemory.readfloat(0x0D9828,true)
-    sinA = -mainmemory.readfloat(0x0D9820,true)
-    sinI = mainmemory.readfloat(0x0D9824,true)
-    cosI = mainmemory.readfloat(0x0D9830,true)
+    cosA = mainmemory.readfloat(pdStart+0x04C8,true)
+    sinA = -mainmemory.readfloat(pdStart+0x04C0,true)
+    sinI = mainmemory.readfloat(pdStart+0x04C4,true)
+    cosI = mainmemory.readfloat(pdStart+0x04D0,true)
 
     -- 0 degrees azimuth is +z, 90 is -x.
 end
