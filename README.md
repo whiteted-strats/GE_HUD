@@ -11,3 +11,4 @@ This (2nd really) version has made substantial changes to the core:
 *Minor issues*
 * Occassionally a draw happens 1 frame earlier than we predicted, and so HUD is behind.
   This mistake does not snowball, and is probably unnoticable when playing in real time.
+* Draws during cutscenes, where it is nonsense. I may well patch this using the mission timer.
