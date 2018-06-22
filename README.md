@@ -7,6 +7,7 @@ This (2nd really) version has made substantial changes to the core:
 * Bond wobble accounted for: The HUD properly (probably) accounts for Bond's aim swaying slightly
 * Look-down / up fixed: HUD no longer gets severely warped
 
-* Minor issues *
+
+*Minor issues*
 * Occassionally a draw happens 1 frame earlier than we predicted, and so HUD is behind.
   This mistake does not snowball, and is probably unnoticable when playing in real time.
