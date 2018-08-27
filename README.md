@@ -1,15 +1,14 @@
-# GE_HUD v1.73205..
-A head-up display for emulating Goldeneye. The current example marks all guards in red. The core code and 'guard marking' code is quite seperate, and should be quite easy to adapt to a different purpose, especially using Wyster's libraries (https://forums.the-elite.net/index.php?topic=21141.msg437009#msg437009). That said, future versions will hopefully have a nice interface for selecting what you want to mark and how. 
+# GE_HUD v3
 
-This (2nd really) version has made substantial changes to the core:
-* Updates only when frames are drawn
-* Caches camera in advance: no lag even as Bond turns sharply, nor on zoom
-* Bond wobble accounted for: The HUD properly (probably) accounts for Bond's aim swaying slightly
-* Look-down / up fixed: HUD no longer gets severely warped
-
+A head-up display for emulating Goldeneye. The core code has finally be properly encapsulated, and actually has a nice interface. The best example of how to use this is found in the example, HUD_all_guards.lua. Wyster's libraries (https://forums.the-elite.net/index.php?topic=21141.msg437009#msg437009) are your friend here. The interface supports:
+* Simple markers: position, thickness, colour
+* Lines, splines, polygons
+* Circles: the centerpiece, set center, radius and any normal (up-vector) you like. Drawn as a irregular n-gon, with n and the irregularness varying based on distance and how steep an angle the circle is being viewed at. For efficiency, adjust the coarseness value, a higher value lowering n.
 
 *Minor issues*
-* Occassionally a draw happens 1 frame earlier than we predicted, and so HUD is behind.
-  This mistake does not snowball, and is probably unnoticable when playing in real time.
-* => Whatever the cause of this, it seems to occur regularly at low lag, i.e. where the emulator draws every frame. This makes the HUD very laggy in these situations.
-* Draws during cutscenes, where it is nonsense. I may well patch this using the mission timer.
+* Efficiency: I haven't checked that line clipping is doing it's job. Also circles are made into polygons and then these are clipped. I really should consider them as a whole first, to see if the entire thing is out of view.
+* Doesn't draw in cutscenes / Bond's death (a leftover from v1.73..), when it can and should.
+* I've only found the matrices for Aztec and Surface 1 (though it's easy to find similar ones on the other levels). This is because of the bigger issue..
+
+*Major issues*
+* In lag the HUD dies. Simply put, the right matrix isn't selected on the right frame. This needs looking into but I cba atm. I'll add my matrix finder to this repository.
