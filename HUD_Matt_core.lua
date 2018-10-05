@@ -4,8 +4,8 @@ require "Data\\GE\\PositionData"
 require "Data\\GE\\GameData"
 
 -- _lib contains simple stuff, _clip does the line (and pont) clipping in the coordinate system
-require "HUD_Matt_lib"
-require "HUD_Matt_clip"
+require "HUD_Matt\\HUD_Matt_lib"
+require "HUD_Matt\\HUD_Matt_clip"
 
 -- ============== HUD Matt core ================
 -- The 'improved' (different) core for building a heads up display
@@ -16,6 +16,8 @@ require "HUD_Matt_clip"
 -- This is actually an encapsulated core now, rather than being an entire HUD example.
 --  => polygons and circles are supported cleanly
 -- 4:3 resolution detection on each frame
+
+-- * Has parameter for calling 
 
 -- ========= Known Issues ==========
 -- BIG: isn't selecting the right matrix very much & only s1 & aztec have matrices
@@ -215,6 +217,7 @@ end
 local getCircles = function ()
     return {}
 end
+local initEveryFrame
 
 -- The name of our frame_end event function
 local funcName = "Whiteted_HUD_Matt_core"
@@ -226,7 +229,8 @@ function hideHUD()
 end
 -- To show a new HUD, we clear any old ones, update markers func and add the event
 -- The followers are initialised
-function showHUD(userInitFunc, getMarkersFunc, getLinesFunc, getPolygonsFunc, getCirclesFunc)
+-- initEveryFrame defaults to nil, hence false
+function showHUD(userInitFunc, getMarkersFunc, getLinesFunc, getPolygonsFunc, getCirclesFunc, paramInitEveryFrame)
     hideHUD()
 
     -- If the user doesn't supply a new function, the previous one / default of nothing is used
@@ -245,6 +249,7 @@ function showHUD(userInitFunc, getMarkersFunc, getLinesFunc, getPolygonsFunc, ge
     if userInitFunc ~= nil then
         userInit = userInitFunc
     end
+    initEveryFrame = paramInitEveryFrame
 
     prev_dc = getDrawCounter()
     the_HUD = nil
@@ -318,7 +323,9 @@ local matricesOffsets = {
     -- Aztec
     [0x1A]={[2]=0x20B40, [0]=0x2AB40},
     -- Surface 1
-    [0x05]={[2]=0x25B40, [0]=0x32340}
+    [0x05]={[2]=0x25B40, [0]=0x32340},
+    -- Caverns
+    [0x17]={[2]=0x34B40, [0]=0x41340}
 }
 
 -- The function which we run every frame while the HUD is active
@@ -348,6 +355,11 @@ function onFrameEnd()
             cameraBuffer[dc % 4] = {}
             cameraBuffer[dc % 4].rotM = matrixFromMainMemory(matAddr)
             cameraBuffer[dc % 4].zoom = getCameraZoom()
+        else
+            -- Still call userInit if they've requested this every frame
+            if initEveryFrame then
+                userInit()
+            end
         end
 
         -- Draw the HUD again regardless (potentially with the same image)
