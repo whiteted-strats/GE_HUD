@@ -1,9 +1,9 @@
+-- Needs to be added to Henrik's library
+
 GuardData.metadata =
 {
     ...
-
-    
-    -- ============== Gunshot mayhem! =================
+	
     
     -- 0xFF most of the time, 0x01,0x02, maybe other numbers, during the shooting.
     --   Maybe angle is fixed at 01, fired 02, FF idle?
