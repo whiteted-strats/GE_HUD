@@ -1,4 +1,4 @@
-# GE_HUD v3
+# GE_HUD v3.1
 
 A head-up display for emulating Goldeneye. The core code has finally be properly encapsulated, and actually has a nice interface. The best example of how to use this is found in the example, HUD_all_guards.lua. Wyster's libraries (https://forums.the-elite.net/index.php?topic=21141.msg437009#msg437009) are your friend here. The interface supports:
 * Simple markers: position, thickness, colour
@@ -11,4 +11,10 @@ A head-up display for emulating Goldeneye. The core code has finally be properly
 * I've only found the matrices for Aztec and Surface 1 (though it's easy to find similar ones on the other levels). This is because of the bigger issue..
 
 *Major issues*
+* I can't seem to find Control's matrices. I'll have a proper look when I cba
 * In lag the HUD dies. Simply put, the right matrix isn't selected on the right frame. This needs looking into but I cba atm. I'll add my matrix finder to this repository.
+* Circle drawing seems very bugged. If I remember correctly it assumes you won't be inside the circle which isn't always the case. Generally seems a bit dodgy.
+
+*Updates for 3.1*
+* All levels except Control have their matrices (probably)
+* Minor bug fixes
