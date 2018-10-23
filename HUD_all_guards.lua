@@ -1,8 +1,8 @@
 require "Utilities\\GE\\GuardDataReader"
 require "Data\\GE\\GuardData"
 require "Data\\GE\\PositionData"
-require "HUD_matt_core"
-require "HUD_matt_lib"
+require "HUD_Matt\\HUD_Matt_core"
+require "HUD_Matt\\HUD_Matt_lib"
 
 local guards = {}
 
