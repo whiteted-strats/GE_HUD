@@ -22,7 +22,14 @@ end
 function normalise(v)
     return scaleVector(v, 1 / length(v))
 end
-
+-- Addition for general use as a library
+-- Returns angle
+function angleBetween(v,w)
+    local dp = dotProduct(v,w)
+    local ang = (180 / math.pi) * math.acos(dp / (length(v) * length(w)))
+    -- note acos from 0 to 180 as is, no need to adjust
+    return ang
+end
 
 -- Reads the draw counter, which ticks in steps of 2, mod 32
 function getDrawCounter()

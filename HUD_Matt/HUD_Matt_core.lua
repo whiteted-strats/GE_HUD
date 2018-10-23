@@ -311,7 +311,6 @@ end
 
 -- ============================ Main routine ==============================
 
-
 -- Caches and follower for drawing the HUD
 local the_HUD = nil
 local prev_dc
@@ -319,13 +318,61 @@ local cameraBuffer = {[0] = nil, [2] = nil}
 
 
 -- Maps (mission #) -> (drawCounter mod 4) -> (player data offset of matrix)
+-- Now featuring all levels (found very quickly but you can check with "matrix_finder.lua")
+-- The following share matrices AS offsets from playerdata:
+-- [ Note I can't really remember why I did these as offsets from playerdata]
+--      Dam, ...
+--      Runway, Bunker 1, 
+
+-- ! Control isn't supported: the classic matrix thrown up by matrix_finder let me down.
+
+local _damMat = {[2]=0x25B40, [0]=0x32340}
+local _runwayMat = {[2]=0x34B40, [0]=0x41340}
+local _streetsMat = {[2]=0x20B40, [0]=0x2AB40}
+local _depotMat = {[2]=0x20B40, [0]=0x2D340}
 local matricesOffsets = {
-    -- Aztec
-    [0x1A]={[2]=0x20B40, [0]=0x2AB40},
+    -- Dam
+    [0x01] = _damMat,
+    -- Facility
+    [0x02] = _damMat,
+    -- Runway
+    [0x03] = _runwayMat,
     -- Surface 1
-    [0x05]={[2]=0x25B40, [0]=0x32340},
+    [0x05] = _damMat,
+    -- Bunker 1
+    [0x06] = _runwayMat, 
+    -- Silo
+    [0x08] = _damMat,
+    -- Frigate
+    [0x0A] = _damMat,
+    -- Surface 2 : weirdly not the same as surface 1
+    [0x0C] = _runwayMat,
+    -- Bunker 2 : but this is the same as bunker 1
+    [0x0D] = _runwayMat,
+    -- Statue
+    [0x0F] = _damMat,
+    -- Archives
+    [0x10] = _damMat,
+    -- Streets
+    [0x11] = _streetsMat,
+    -- Depot : sharing 1 matrix with streets, but not the other it seems?
+    [0x12] = _depotMat,
+    -- Train
+    [0x13] = _runwayMat,
+    -- Jungle
+    [0x15] = _damMat,
+
+    -- Control : it's not working..
+    -- [0x16] = _damMat,
+
     -- Caverns
-    [0x17]={[2]=0x34B40, [0]=0x41340}
+    [0x17]= _runwayMat,
+    -- Cradle
+    [0x18] = _runwayMat,
+    -- Aztec
+    [0x1A] = _streetsMat,
+    -- Egyptian
+    [0x1C] = _runwayMat 
 }
 
 -- The function which we run every frame while the HUD is active
@@ -333,8 +380,23 @@ function onFrameEnd()
     local dc = getDrawCounter()
     local border = getBorder()
 
+    -- Detect an unsupported mission here rather than initially (user may change missions)
+    -- Unregister a function, probably us, but stable even if it's not.
+    -- tbh I should just find all the matrices..
     local missionNum = GameData.get_current_mission()
-    if missionActive() and (not (matricesOffsets[missionNum] == nil))  then
+    if matricesOffsets[missionNum] == nil then
+        -- If it's not a level, just idle (we're in the menu or whatever)
+        if GameData.mission_index_to_name[missionNum] ~= nil then
+            -- Shouldn't run now :)
+            console.log("The level '" .. GameData.mission_index_to_name[missionNum] .. "' is not supported by HUD Matt.")
+            console.log("Use the matrix_finder.lua and add the correct values to matricesOffsets in HUD_Matt_core.")
+            console.log("Alternatively tell me to be less lazy and find the matrices.")
+            console.log("HUD terminating.")
+            event.unregisterbyname(funcName)
+        end
+        return
+    end
+    if missionActive()  then
         -- Update scale and center point
         scale = client.bufferwidth()/320
         centerP = {x=scale*160,y=scale*120}

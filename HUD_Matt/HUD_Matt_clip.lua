@@ -4,7 +4,8 @@
 --  1. clipPointObjs(ps)
 --  2. clipPolyLineObjs(lns)
 
-require "HUD_Matt_lib"
+require "HUD_Matt\\HUD_Matt_lib"
+
 
 -- The faces of the viewing frustrum, in the VIEW COORDINATE SYSTEM, with the camera eye at the origin
 -- ref: http://n64.icequake.net/doc/n64intro/kantan/step3/index3.html (3.3.4 View Co-ordinate System)
